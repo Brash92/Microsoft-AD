@@ -1,0 +1,15 @@
+Connect-exchangeOnline
+
+# Get all yammer groups
+$yammerGroups = Get-UnifiedGroup |?{$_.GroupSku -eq "Yammer"}
+
+# For each yammer group, hide it from Exchange
+foreach ($group in $yammerGroups)
+{
+  # Hide group
+	Write-Host "Hiding $group"
+	Set-UnifiedGroup -Identity $group.DisplayName -HiddenFromExchangeClientsEnabled:$true -HiddenFromAddressListsEnabled:$true
+
+  # Output to validate the group is noe hidden
+	Get-UnifiedGroup -Identity $group |ft DisplayName,HiddenFrom*
+}
